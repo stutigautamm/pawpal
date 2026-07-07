@@ -5,6 +5,7 @@ classDiagram
         +List~Pet~ pets
         +add_pet(pet: Pet) void
         +update_availability(minutes: int) void
+        +get_all_tasks() List~Task~
     }
 
     class Pet {
@@ -13,6 +14,7 @@ classDiagram
         +int age
         +List~Task~ tasks
         +add_task(task: Task) void
+        +remove_task(task_id: String) bool
         +get_total_task_duration() int
     }
 
@@ -20,21 +22,33 @@ classDiagram
         +String id
         +String name
         +int duration
-        +int priority
+        +Priority priority
         +bool is_completed
-        +update_task(name: String, duration: int, priority: int) void
-        +toggle_complete() void
+        +String pet_name
+        +update_task(name: String, duration: int, priority: Priority) void
+        +mark_complete() void
+    }
+
+    class Priority {
+        <<enumeration>>
+        LOW = 1
+        MEDIUM = 2
+        HIGH = 3
     }
 
     class Scheduler {
         +Owner owner
-        +List daily_plan
+        +List~Task~ daily_plan
         +List~String~ reasoning_log
-        +generate_schedule() List
+        +generate_schedule() List~Task~
         +get_reasoning() String
     }
 
     %% Relationships
-    Owner "1" --> "*" Pet : owns
-    Pet "1" --> "*" Task : has
+    Owner "1" o-- "*" Pet : owns
+    Pet "1" o-- "*" Task : has
+    Task ..> Pet : refers to (by name)
+    Task ..> Priority : uses
     Scheduler "1" --> "1" Owner : plans_for
+    Scheduler ..> Pet : reads
+    Scheduler ..> Task : orders
