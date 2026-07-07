@@ -42,10 +42,28 @@ Why the change was made:
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+Constraints:
+Time Limits: The app tracks how many total minutes the owner has available today. It will never book more tasks than there is time for, and it will skip a large task if it doesn't fit so it can look for smaller tasks that do.
+
+Task Priorities: Tasks are ranked by importance (HIGH, MEDIUM, LOW). If two tasks have the same priority, the app automatically chooses the shorter one first so you can get more done.
+
+I decided the time constraint mattered more because it is a hard limit where you simply cannot do a 45-minute task if you only have 30 minutes left in your day.
+
+After checking the time, I thought the priority constraint matters as well. Important health tasks (like giving medication) should always happen before optional tasks (like grooming) to make sure the pet's basic needs are met first.
+
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
+
+Our scheduler uses a quick and simple way to check for time conflicts rather than a complex calendar booking system.
+
+How it works right now: The app only flags a warning if two tasks have the exact same start time (like two tasks both set for `09:05`).
+
+The Tradeoff: This makes the code very fast and prevents the app from crashing. However, it doesn't calculate if a task's duration runs into another task. For example, if a 45-minute walk starts at `08:00` and a vet call is set for `08:15`, the app won't show a warning even though those tasks technically overlap.
+
+Why this choice was made: The main goal of this app is to fit tasks into a total daily minute budget. Keeping the code simple and easy to read was more important than building a full, complicated calendar tracking system.
 
 ---
 
@@ -56,10 +74,14 @@ Why the change was made:
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+
 
 ---
 

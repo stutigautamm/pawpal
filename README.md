@@ -55,18 +55,18 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 
 Created owner 'Stuti' with a 90 minute budget.
 ========================================
-        TODAY'S SCHEDULE
+        TODAY'S SCHEDULE (by time)
 ========================================
-1. Give Medication (Rex)
-   5 min  |  Priority: HIGH
-2. Feed (Milo)
-   10 min  |  Priority: HIGH
-3. Play / Enrichment (Milo)
-   20 min  |  Priority: MEDIUM
-4. Morning Walk (Rex)
-   30 min  |  Priority: MEDIUM
+07:15  Morning Walk (Rex)
+        30 min  |  Priority: MEDIUM
+08:00  Give Medication (Rex)
+        5 min  |  Priority: HIGH
+09:05  Feed (Milo)
+        10 min  |  Priority: HIGH
+09:05  Vet Call (Rex)
+        15 min  |  Priority: MEDIUM
 ----------------------------------------
-Total scheduled time: 65 min
+Total scheduled time: 60 min
 
 ========================================
         REASONING
@@ -74,9 +74,10 @@ Total scheduled time: 65 min
 Starting schedule for Stuti with 90 min available.
 Scheduled 'Give Medication' for Rex (HIGH, 5 min). 85 min left.
 Scheduled 'Feed' for Milo (HIGH, 10 min). 75 min left.
-Scheduled 'Play / Enrichment' for Milo (MEDIUM, 20 min). 55 min left.
-Scheduled 'Morning Walk' for Rex (MEDIUM, 30 min). 25 min left.
-Skipped 'Evening Grooming' for Rex (LOW, 45 min) ▒ needs 45 min but only 25 left.
+Scheduled 'Vet Call' for Rex (MEDIUM, 15 min). 60 min left.
+Scheduled 'Morning Walk' for Rex (MEDIUM, 30 min). 30 min left.
+Skipped 'Evening Grooming' for Rex (LOW, 45 min) ▒ needs 45 min but only 30 left.
+Final plan: 4 of 5 pending task(s), 60 of 90 min used.
 ```
 
 ## 🧪 Testing PawPal+
@@ -101,10 +102,10 @@ Sample test output:
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | Scheduler.sort_by_time() | sorts daily plan chronologically |
+| Filtering | Owner.filter_tasks() | filters task list by completion status |
+| Conflict handling | Scheduler.detect_conflicts() | groups pending tasks by timeslot |
+| Recurring tasks | Task.next_occurrence(), Pet.complete_task(), Scheduler.mark_task_complete() | builds a pending copy of a recurring task advanced to the next due date |
 
 ## 📸 Demo Walkthrough
 
