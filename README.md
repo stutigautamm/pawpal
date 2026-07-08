@@ -113,7 +113,9 @@ tests\test_pawpal.py ...........................                         [100%]
 ============================= 27 passed in 0.07s ==============================
 ```
 System Reliability Rating
+
 (5/5 Stars)
+
 Since all the tests, which include edge cases and happy paths, are passing perfectly, the core engine proves to be completely reliable at tracking dates, catch errors, and scheduling tasks correctly.
 
 ## 📐 Smarter Scheduling
@@ -132,9 +134,13 @@ Since all the tests, which include edge cases and happy paths, are passing perfe
 Main UI Features and User Actions
 
 Owner Profile Setup: Configure owner name and update available time budget dynamically.
+
 Pet Registry: Input a pet profile with its name, species/breed, and age parameters.
+
 Task Formulation: Add tasks featuring title, runtime, zero-padded HH:MM target time, explicit priority status, and frequency recurrences.
+
 Status Updates: Dropdown menus allow items to be logged as completed on the fly.
+
 Schedule Compilation: Triggering the engine displays an orderly, timed task matrix and expands the scheduler logic thought logs.
 
 
