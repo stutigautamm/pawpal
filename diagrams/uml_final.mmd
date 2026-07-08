@@ -1,0 +1,72 @@
+classDiagram
+    class Owner {
+        +String name
+        +int available_time_minutes
+        +List~Pet~ pets
+        +add_pet(pet: Pet) void
+        +update_availability(minutes: int) void
+        +get_all_tasks() List~Task~
+        +filter_tasks(is_completed: bool, pet_name: String) List~Task~
+    }
+
+    class Pet {
+        +String name
+        +String breed
+        +int age
+        +List~Task~ tasks
+        +add_task(task: Task) void
+        +remove_task(task_id: String) bool
+        +complete_task(task_id: String) Task
+        +get_total_task_duration() int
+    }
+
+    class Task {
+        +String id
+        +String name
+        +int duration
+        +Priority priority
+        +String pet_name
+        +String time
+        +Frequency frequency
+        +date due_date
+        +bool is_completed
+        +next_occurrence() Task
+        +update_task(name: String, duration: int, priority: Priority, time: String) void
+        +mark_complete() void
+    }
+
+    class Priority {
+        <<enumeration>>
+        LOW = 1
+        MEDIUM = 2
+        HIGH = 3
+    }
+
+    class Frequency {
+        <<enumeration>>
+        ONCE = "once"
+        DAILY = "daily"
+        WEEKLY = "weekly"
+    }
+
+    class Scheduler {
+        +Owner owner
+        +List~Task~ daily_plan
+        +List~String~ reasoning_log
+        +generate_schedule() List~Task~
+        +sort_by_time() List~Task~
+        +detect_conflicts() List~String~
+        +mark_task_complete(task_id: String) Task
+        +get_reasoning() String
+    }
+
+    %% Relationships
+    Owner "1" o-- "*" Pet : owns
+    Pet "1" o-- "*" Task : has
+    Task ..> Pet : refers to (by name)
+    Task ..> Priority : uses
+    Task ..> Frequency : uses
+    Task ..> Task : spawns next_occurrence
+    Scheduler "1" --> "1" Owner : plans_for
+    Scheduler ..> Pet : completes tasks via
+    Scheduler ..> Task : orders & detects conflicts

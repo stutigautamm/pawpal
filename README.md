@@ -91,7 +91,7 @@ pytest --cov
 ```
 Using the command python -m pytest to run the tests, here is a description of what the tests cover:
 
-1. Sorting and Urgency: Makes sure tasks are ordered by importance (HIGH $\rightarrow$ MEDIUM $\rightarrow$ LOW). If importance is equal, shorter tasks come first. The final plan is sorted perfectly from morning to night.
+1. Sorting and Urgency: Makes sure tasks are ordered by importance. If importance is equal, shorter tasks come first. The final plan is sorted perfectly from morning to night.
 2. Repeating Tasks: Confirms that completing a daily or weekly task automatically creates a brand-new copy for the next due date without making accidental duplicates.
 3. Time Conflicts: Checks for tasks set for the exact same time and displays a clear warning for single or multiple pets while ignoring tasks that are already done.
 4. Limits and Budget: Tests that tasks fitting the minute budget perfectly are scheduled, while tasks that take too long are skipped safely.
@@ -129,12 +129,76 @@ Since all the tests, which include edge cases and happy paths, are passing perfe
 
 ## 📸 Demo Walkthrough
 
+Main UI Features and User Actions
+
+Owner Profile Setup: Configure owner name and update available time budget dynamically.
+Pet Registry: Input a pet profile with its name, species/breed, and age parameters.
+Task Formulation: Add tasks featuring title, runtime, zero-padded HH:MM target time, explicit priority status, and frequency recurrences.
+Status Updates: Dropdown menus allow items to be logged as completed on the fly.
+Schedule Compilation: Triggering the engine displays an orderly, timed task matrix and expands the scheduler logic thought logs.
+
+
 Describe your app in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Create the Owner Profile: Type in the owner's name as your name and set the available care time to `90` minutes.
+2. Add Your Pets: Go to the "Add a Pet" form. Go to the "Add a Pet" section. Type `"Rex"`, choose `"dog"`, set the age to `3`, and click the button. Do this again to add `"Milo"` (species: `"cat"`, age: `5`).
+3. Create the Task Lists: Use the "Add a Task" form to assign multiple items. For example, add a `"Morning Walk"` for Rex (30 min, Medium priority, at `07:15`, daily) and a `"Feed"` task for Milo (10 min, High priority, at `09:05`, Daily).
+4. Look for Warnings: Look at the tasks list. If you accidentally schedule two different tasks at the exact same time, a warning banner will pop up to alert you.
+5. Generate and Review the Schedule: Scroll to the bottom and click "Generate schedule". The app will instantly show your daily routine sorted from morning to night, along with the reaosning explaining how it fit everything into your 90-minute limit.
+
+
+Fenced code block of sample CLI output from running main.py
+```
+Created owner 'Stuti' with a 90 minute budget.
+========================================
+        TODAY'S SCHEDULE (by time)
+========================================
+07:15  Morning Walk (Rex)
+        30 min  |  Priority: MEDIUM
+08:00  Give Medication (Rex)
+        5 min  |  Priority: HIGH
+09:05  Feed (Milo)
+        10 min  |  Priority: HIGH
+09:05  Vet Call (Rex)
+        15 min  |  Priority: MEDIUM
+----------------------------------------
+Total scheduled time: 60 min
+
+========================================
+        REASONING
+========================================
+Starting schedule for Stuti with 90 min available.
+Ignored 1 already-completed task(s).
+Scheduled 'Give Medication' for Rex (HIGH, 5 min). 85 min left.
+Scheduled 'Feed' for Milo (HIGH, 10 min). 75 min left.
+Scheduled 'Vet Call' for Rex (MEDIUM, 15 min). 60 min left.
+Scheduled 'Morning Walk' for Rex (MEDIUM, 30 min). 30 min left.
+Skipped 'Evening Grooming' for Rex (LOW, 45 min) ▒ needs 45 min but only 30 left.
+Final plan: 4 of 5 pending task(s), 60 of 90 min used.
+
+========================================
+        FILTERS
+========================================
+Rex's tasks (4):
+  - Morning Walk @ 07:15
+  - Give Medication @ 08:00
+  - Vet Call @ 09:05
+  - Evening Grooming @ 18:30
+Pending: 5  |  Completed: 1
+
+========================================
+        CONFLICTS
+========================================
+WARNING - Conflict at 09:05: 2 tasks (2 pets) - 'Vet Call' (Rex), 'Feed' (Milo).
+
+========================================
+        RECURRENCE
+========================================
+Completing daily task 'Give Medication' (id ...302b17).
+Task count: 6 -> 7
+Spawned next occurrence: 'Give Medication' @ 08:00 (daily), completed=False, new id ...e67fc1
+Due date advanced: 2026-07-07 -> 2026-07-08
+'Give Medication' original now completed=True
+```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->

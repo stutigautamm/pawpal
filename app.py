@@ -137,6 +137,14 @@ else:
 # --- Current pets & tasks -------------------------------------------------
 if owner.pets:
     st.markdown("### Current pets & tasks")
+
+    # Warn early: flag any two pending tasks booked for the same time so the
+    # owner can fix the clash while adding tasks, before building a schedule.
+    early_conflicts = Scheduler(owner).detect_conflicts()
+    if early_conflicts:
+        for warning in early_conflicts:
+            st.warning(warning.replace("WARNING - ", ""), icon="⏰")
+
     for pet in owner.pets:
         st.markdown(f"**{pet.name}** ({pet.breed}, age {pet.age}) — {pet.get_total_task_duration()} min total")
         if pet.tasks:
@@ -194,15 +202,48 @@ if st.button("Generate schedule"):
     scheduler = Scheduler(owner)
     plan = scheduler.generate_schedule()
 
+    # Surface any same-time clashes first so the owner sees them before the plan.
+    # detect_conflicts() inspects all pending tasks, so it catches overlaps even
+    # between tasks that both made it into the plan.
+    conflicts = scheduler.detect_conflicts()
+    if conflicts:
+        st.warning(
+            f"⚠️ Heads up — {len(conflicts)} time conflict(s) found. "
+            "You can't be in two places at once, so consider re-timing one of each pair:"
+        )
+        for warning in conflicts:
+            # Strip the backend's "WARNING - " prefix; the icon already signals it.
+            st.warning(warning.replace("WARNING - ", ""), icon="⏰")
+
     if not plan:
         st.info("Nothing could be scheduled.")
     else:
+        # Show the plan in the order the owner will actually do it: by start time.
+        ordered_plan = scheduler.sort_by_time()
+        total = sum(task.duration for task in ordered_plan)
+
+        st.success(
+            f"✅ Scheduled {len(ordered_plan)} task(s) — "
+            f"{total} of {owner.available_time_minutes} min used."
+        )
+
         st.markdown("#### Today's Schedule")
-        total = 0
-        for i, task in enumerate(plan, start=1):
-            total += task.duration
-            st.write(f"{i}. **{task.name}** ({task.pet_name}) — {task.duration} min · {task.priority.name}")
-        st.caption(f"Total scheduled time: {total} of {owner.available_time_minutes} min")
+        st.table(
+            [
+                {
+                    "time": task.time,
+                    "task": task.name,
+                    "pet": task.pet_name,
+                    "minutes": task.duration,
+                    "priority": task.priority.name,
+                }
+                for task in ordered_plan
+            ]
+        )
+
+        # A simple visual budget check.
+        remaining = owner.available_time_minutes - total
+        st.caption(f"⏳ {remaining} min of free time left today.")
 
     with st.expander("Why this plan? (reasoning)"):
         st.text(scheduler.get_reasoning())
