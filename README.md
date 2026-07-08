@@ -89,12 +89,32 @@ pytest
 # Run with coverage:
 pytest --cov
 ```
+Using the command python -m pytest to run the tests, here is a description of what the tests cover:
+
+1. Sorting and Urgency: Makes sure tasks are ordered by importance (HIGH $\rightarrow$ MEDIUM $\rightarrow$ LOW). If importance is equal, shorter tasks come first. The final plan is sorted perfectly from morning to night.
+2. Repeating Tasks: Confirms that completing a daily or weekly task automatically creates a brand-new copy for the next due date without making accidental duplicates.
+3. Time Conflicts: Checks for tasks set for the exact same time and displays a clear warning for single or multiple pets while ignoring tasks that are already done.
+4. Limits and Budget: Tests that tasks fitting the minute budget perfectly are scheduled, while tasks that take too long are skipped safely.
+5. Data Protection: Makes sure time entries use the correct format (like 09:05) and stops errors like typing in a negative time budget.
+
 
 Sample test output:
 
 ```
 # Paste your pytest output here
+============================= test session starts =============================
+platform win32 -- Python 3.13.12, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Stuti\AI110\pawpal
+plugins: anyio-4.14.1
+collected 27 items
+
+tests\test_pawpal.py ...........................                         [100%]
+
+============================= 27 passed in 0.07s ==============================
 ```
+System Reliability Rating
+(5/5 Stars)
+Since all the tests, which include edge cases and happy paths, are passing perfectly, the core engine proves to be completely reliable at tracking dates, catch errors, and scheduling tasks correctly.
 
 ## 📐 Smarter Scheduling
 
